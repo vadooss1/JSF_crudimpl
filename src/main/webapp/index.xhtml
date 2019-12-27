@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+  <title>Home page</title>
+</h:head>
+
+<h:body>
+
+  <p:panel id="pn" header="Manage your contacts">
+    <h:form>
+      <p/>
+      <p:commandButton value="AddNew" oncomplete="PF('dlg').show()"/>
+      <p/>
+    </h:form>
+
+    <h:form id="form">
+      <p:growl id="msgs" showDetail="true"/>
+      <p:dataTable editable="true" id="tbl1" value="#{dao.getAllUsers()}" var="user">
+
+
+        <p:ajax event="rowEdit" listener="#{dtEditView.onRowEdit}" update=":form:msgs"/>
+        <p:ajax event="rowEditCancel" listener="#{dtEditView.onRowCancel}" update=":form:msgs"/>
+
+        <p:column headerText="id" style="width:60px">
+          <h:outputText value="#{user.id}"/>
+        </p:column>
+        <p:column headerText="firstname">
+          <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.name}"/></f:facet>
+            <f:facet name="input"><p:inputText value="#{user.name}" style="width:100%" label="name"/></f:facet>
+          </p:cellEditor>
+        </p:column>
+        <p:column headerText="lastname">
+          <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.lastname}"/></f:facet>
+            <f:facet name="input"><p:inputText value="#{user.lastname}" style="width:100%" label="lastname"/></f:facet>
+          </p:cellEditor>
+        </p:column>
+        <p:column headerText="phone" style="width:210px">
+          <p:cellEditor>
+            <f:facet name="output"><h:outputText value="#{user.phone}"/></f:facet>
+            <f:facet name="input"><p:inputText value="#{user.phone}" style="width:100%" label="phone"/></f:facet>
+          </p:cellEditor>
+        </p:column>
+        <p:column headerText="action" style="width:140px">
+          <p:menuButton value="Delete">
+            <p:menuitem value="confirm action" action="#{dao.deleteUser(user)}" update="tbl1" icon="pi pi-times"/>
+          </p:menuButton>
+        </p:column>
+        <p:column headerText="action" style="width:70px">
+          <p:commandButton value="Edit" onclick="PF('dlg2').show()"/>
+        </p:column>
+        <p:column style="width:20px">
+          <p:rowEditor/>
+        </p:column>
+
+      </p:dataTable>
+
+    </h:form>
+
+    <h:form>
+      <p:dialog widgetVar="dlg" modal="true" resizable="false" header="Saving" showEffect="fade">
+
+        <h:panelGrid columns="2" id="display" cellpadding="5" columnClasses="label,value">
+
+          <p:outputLabel for="na" value="Name:" title="obligatory"/>
+          <p:inputText id="na" value="#{user.name}" required="true"/>
+
+          <p:outputLabel for="la" value="Last name:" title="obligatory"/>
+          <p:inputText id="la" value="#{user.lastname}" required="true"/>
+
+          <p:outputLabel for="phone" value="Phone:"/>
+          <p:inputMask id="phone" value="#{user.phone}" mask="(999) 999-9999"/>
+
+          <p:commandButton value="2: OK" update="pn"/>
+          <p:commandButton id="sv1" value="1: Save" action="#{dao.addUser(user)}" update="display">
+            <p:outputLabel for="sv1" value=": - - -     "/>
+          </p:commandButton>
+
+        </h:panelGrid>
+      </p:dialog>
+
+    </h:form>
+
+    <h:form>
+      <p:dialog widgetVar="dlg2" modal="true" resizable="false" header="Saving" showEffect="fade">
+
+        <h:panelGrid columns="2" id="display2" cellpadding="5" columnClasses="label,value">
+
+
+          <p:outputLabel for="idu2" value="ID(take from table):"/>
+          <p:inputText id="idu2" value="#{user.id}" />
+
+          <p:outputLabel for="na2" value="Name:" title="obligatory"/>
+          <p:inputText id="na2" value="#{user.name}" required="true" />
+
+          <p:outputLabel for="la2" value="Last name:" title="obligatory"/>
+          <p:inputText id="la2" value="#{user.lastname}" required="true"/>
+
+          <p:outputLabel for="phone2" value="Phone:"/>
+          <p:inputMask id="phone2" value="#{user.phone}" mask="(999) 999-9999"/>
+
+          <br/>
+          <p:commandButton value="Save" action="#{dao.addUser(user)}" update="pn">
+          </p:commandButton>
+
+        </h:panelGrid>
+      </p:dialog>
+
+    </h:form>
+
+
+  </p:panel>
+
+</h:body>
+
+</html>
+

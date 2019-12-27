@@ -1,0 +1,5 @@
+com\vvz\persisting\MySQLconnector.class
+com\vvz\persisting\ConfigLoader.class
+com\vvz\persisting\DAO.class
+com\vvz\model\User.class
+com\vvz\model\EditView.class
